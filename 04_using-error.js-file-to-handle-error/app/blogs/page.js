@@ -1,7 +1,14 @@
 import Link from "next/link";
 
 const Blogs = () => {
-  console.log("Blogs Page");
+  // console.log("Blogs Page");
+
+  // const randomNumber = Math.random();
+  // console.log(randomNumber);
+  
+  // if (randomNumber > 0.5) {
+  //   throw new Error("Error occurred");
+  // }
   return (
     <>
       <div>
