@@ -1,4 +1,5 @@
 // export const dynamic = "force-dynamic";
+import styles from "./Home.module.css";
 
 const Home = () => {
   // const randomNumber = Math.random();
@@ -13,7 +14,7 @@ const Home = () => {
     <>
       <div>
         <h1>Home Page</h1>
-        <p>Welcome to our website!</p>
+        <p className={styles.title}>Welcome to our website!</p>
       </div>
     </>
   );

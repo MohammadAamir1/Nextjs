@@ -1,5 +1,9 @@
+import styles from "./blogID.module.css";
+// import "./hi.css"; // high priority
+
 const Blog = async ({ params }) => {
   const { blogID } = await params;
+  console.log(styles)
 
 //   if (blogID % 2 === 0) {
 //     throw new Error('BlogId can only be an odd number');
@@ -15,7 +19,7 @@ const Blog = async ({ params }) => {
   return (
     <>
       <div>
-        <h1>Welcome to Our Blog {blogID}</h1>
+        <h1 className={styles.title}>Welcome to Our Blog {blogID}</h1>
         <p>This is blog {blogID} page.</p>
       </div>
     </>
