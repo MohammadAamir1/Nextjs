@@ -22,10 +22,13 @@
 // server.listen(4000, () => {
 //   console.log('server started on port 4000');
 // })
+
+import { workFile } from "node:fs/promises";
 import todosData from "../../todos.json";
 
+
 export function GET() {
-  console.log('Running GET route handler.')
+  // console.log('Running GET route handler.')
   // return new Response(JSON.stringify(todosData), {
   //   headers: {
   //     // "Content-Type": "application/json",
@@ -38,4 +41,18 @@ export function GET() {
 
   return Response.json(todosData)
 
+}
+
+export async function POST(request){
+  const todo = await request.json();
+  const newTodo = {
+  //   // id: todosData.length + 1, 
+    id: crypto.randomUUID(), // for adding unique not duplicate
+    text: todo.text,
+    completed: false,
+  }
+  todosData.push(newTodo);
+  // for write
+  // await writeFile('todos.json',JSON.stringify(todosData))
+  return Response.json(todosData);
 }
