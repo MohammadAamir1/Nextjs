@@ -23,7 +23,7 @@
 //   console.log('server started on port 4000');
 // })
 
-import { workFile } from "node:fs/promises";
+import { writeFile } from "node:fs/promises";
 import todosData from "../../todos.json";
 
 
@@ -53,6 +53,6 @@ export async function POST(request){
   }
   todosData.push(newTodo);
   // for write
-  // await writeFile('todos.json',JSON.stringify(todosData))
-  return Response.json(todosData);
+  await writeFile("todosData.json",JSON.stringify(todosData, null, 2))
+  return Response.json(newTodo);
 }

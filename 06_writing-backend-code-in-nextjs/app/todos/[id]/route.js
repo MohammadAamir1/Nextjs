@@ -1,3 +1,4 @@
+import { writeFile } from "node:fs/promises";
 import todos from "../../../todos.json";
 
 export async function GET(_, { params }){
@@ -17,4 +18,27 @@ export async function GET(_, { params }){
         )
     }
     return Response.json(todo);
+}
+
+export async function PUT(request, { params }){
+  const editTodoData = await request.json();
+  const { id } = await params;
+  const todoIndex = todos.findIndex((todo) => id == todo.id);
+  const todo = todos[todoIndex];
+
+  if(editTodoData.id){
+    return Response.json(
+        { error: "Changing ID is not allow."},
+        {
+            status: 403,
+        }
+    )
+  }
+
+  const editedTodo = { ...todo, ...editTodoData}
+
+  todos[todoIndex] = editedTodo;
+  // for write
+  await writeFile("todos.json",JSON.stringify(todos, null, 2))
+  return Response.json(editedTodo);
 }

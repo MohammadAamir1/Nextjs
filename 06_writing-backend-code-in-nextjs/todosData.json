@@ -1,0 +1,32 @@
+[
+  {
+    "id": 1,
+    "text": "Learn Next.js 15",
+    "completed": false
+  },
+  {
+    "id": 2,
+    "text": "Master Node.js",
+    "completed": true
+  },
+  {
+    "id": 3,
+    "text": "Learn MongoDB",
+    "completed": true
+  },
+  {
+    "id": "c404ea91-1ad2-4efe-9eff-0ce1798fd1d5",
+    "text": "Complete DSA",
+    "completed": false
+  },
+  {
+    "id": "acefc47a-da78-4b9f-af64-922a88a81c68",
+    "text": "Complete DSA",
+    "completed": false
+  },
+  {
+    "id": "8ab1c741-a3d3-406d-9ce4-e905511a6149",
+    "text": "Complete DSA",
+    "completed": false
+  }
+]
