@@ -1,44 +1,51 @@
+// return Response.json(todosData[id - 1]); this method not for any id
 import { writeFile } from "node:fs/promises";
-import todos from "../../../todos.json";
+import todos from "../../../todos";
 
-export async function GET(_, { params }){
-    const { id } = await params;
-    // console.log(context);
-    // console.log(a);
-    // return Response.json(todosData[id - 1]); this method not for any id
+export async function GET(_, { params }) {
+  const { id } = await params;
+  const todo = todos.find((todo) => id === todo.id);
 
-    const todo = todos.find((todo) => id == todo.id.toString());
-
-    if(!todo) {
-        return Response.json(
-            { error: "Todo not found" },
-            {
-                status: 404,
-            }
-        )
-    }
-    return Response.json(todo);
+  if (!todo) {
+    return Response.json(
+      { error: "Todo not found" },
+      {
+        status: 404,
+      }
+    );
+  }
+  return Response.json(todo);
 }
 
-export async function PUT(request, { params }){
+export async function PUT(request, { params }) {
   const editTodoData = await request.json();
   const { id } = await params;
-  const todoIndex = todos.findIndex((todo) => id == todo.id);
+  const todoIndex = todos.findIndex((todo) => id === todo.id);
   const todo = todos[todoIndex];
 
-  if(editTodoData.id){
+  if (editTodoData.id) {
     return Response.json(
-        { error: "Changing ID is not allow."},
-        {
-            status: 403,
-        }
-    )
+      { error: "Changing ID is not allow." },
+      {
+        status: 403,
+      }
+    );
   }
 
-  const editedTodo = { ...todo, ...editTodoData}
-
+  const editedTodo = { ...todo, ...editTodoData };
   todos[todoIndex] = editedTodo;
-  // for write
-  await writeFile("todos.json",JSON.stringify(todos, null, 2))
+
+  await writeFile("todos.json", JSON.stringify(todos, null, 2));
   return Response.json(editedTodo);
+}
+
+export async function DELETE(_, { params }) {
+  const { id } = await params;
+  const todoIndex = todos.findIndex((todo) => id === todo.id);
+
+  todos.splice(todoIndex, 1);
+  await writeFile("todos.json", JSON.stringify(todos, null, 2));
+  return new Response(null, {
+    status: 204,
+  });
 }

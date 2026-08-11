@@ -23,36 +23,26 @@
 //   console.log('server started on port 4000');
 // })
 
-import { writeFile } from "node:fs/promises";
-import todosData from "../../todos.json";
+import { readFile, writeFile } from "node:fs/promises";
+import todos from "../../todos";
 
-
-export function GET() {
-  // console.log('Running GET route handler.')
-  // return new Response(JSON.stringify(todosData), {
-  //   headers: {
-  //     // "Content-Type": "application/json",
-  //     // "Content-Type": "audio/mp3",
-  //     "Content-Type": "application/pdf", //mime types
-  //   },
-  //   status:200,
-  //   statusText:'Ok Google',
-  // });
-
-  return Response.json(todosData)
-
+export async function GET() {
+  const todoJSONString = await readFile("./todos.json", "utf-8");
+  const todos = JSON.parse(todoJSONString);
+  return Response.json(todos);
 }
 
-export async function POST(request){
+export async function POST(request) {
   const todo = await request.json();
   const newTodo = {
-  //   // id: todosData.length + 1, 
-    id: crypto.randomUUID(), // for adding unique not duplicate
+    id: crypto.randomUUID(),
     text: todo.text,
     completed: false,
-  }
-  todosData.push(newTodo);
-  // for write
-  await writeFile("todosData.json",JSON.stringify(todosData, null, 2))
-  return Response.json(newTodo);
+  };
+
+  todos.push(newTodo);
+  await writeFile("todos.json", JSON.stringify(todos, null, 2));
+  return Response.json(newTodo, {
+    status: 201,
+  });
 }

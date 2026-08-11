@@ -8,10 +8,5 @@
     "id": 2,
     "text": "Buy all Books",
     "completed": false
-  },
-  {
-    "id": 3,
-    "text": "Learn MongoDB",
-    "completed": true
   }
 ]
