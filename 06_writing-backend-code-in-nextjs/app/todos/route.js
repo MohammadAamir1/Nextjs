@@ -1,15 +1,21 @@
 import { readFile, writeFile } from "node:fs/promises";
 import todos from "../../todos";
 import { connectDB } from "@/lib/connectDB";
-import mongoose from "mongoose";
+// import mongoose from "mongoose";
+import Todo from "@/models/todoModel";
+
 // connectDB();
 
 export async function GET() {
   await connectDB();
   // const result = db.collection("users").insertOne({ name: "Amir" });
-  const result = await mongoose.connection.db
-    .collection("todos")
-    .insertMany([{ title: "Learn Node.js", completed: false }]);
+  // const result = await mongoose.connection.db
+  //   .collection("todos")
+  //   .insertMany([{ title: "Learn Node.js", completed: false }]);
+  const newTodo = await Todo.create({
+    text: "Learn Typescript",
+  })
+  const result = await Todo.find();
   console.log(result);
 
   const todoJSONString = await readFile("./todos.json", "utf-8");
