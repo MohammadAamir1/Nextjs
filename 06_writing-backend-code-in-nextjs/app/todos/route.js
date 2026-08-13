@@ -1,5 +1,5 @@
-import { readFile, writeFile } from "node:fs/promises";
-import todos from "../../todos";
+// import { readFile, writeFile } from "node:fs/promises";
+// import todos from "../../todos";
 import { connectDB } from "@/lib/connectDB";
 // import mongoose from "mongoose";
 import Todo from "@/models/todoModel";
@@ -12,28 +12,22 @@ export async function GET() {
   // const result = await mongoose.connection.db
   //   .collection("todos")
   //   .insertMany([{ title: "Learn Node.js", completed: false }]);
-  const newTodo = await Todo.create({
-    text: "Learn Typescript",
-  })
-  const result = await Todo.find();
-  console.log(result);
+  const allTodo = await Todo.find();
+  // console.log(allTodo.map(((id,))));
 
-  const todoJSONString = await readFile("./todos.json", "utf-8");
-  const todos = JSON.parse(todoJSONString);
-  return Response.json(result);
+  // const todoJSONString = await readFile("./todos.json", "utf-8");
+  // const todos = JSON.parse(todoJSONString);
+  return Response.json(allTodo.map(({ id, text, completed }) => ({ id, text, completed })));
 }
 
 export async function POST(request) {
+  await connectDB()
   const todo = await request.json();
-  const newTodo = {
-    id: crypto.randomUUID(),
-    text: todo.text,
-    completed: false,
-  };
-
-  todos.push(newTodo);
-  await writeFile("todos.json", JSON.stringify(todos, null, 2));
-  return Response.json(newTodo, {
-    status: 201,
-  });
+  const { id, text, completed } = await Todo.create({ text: todo.text})
+  return Response.json(
+    { id, text, completed },
+    {
+      status: 201,
+    }
+  );
 }

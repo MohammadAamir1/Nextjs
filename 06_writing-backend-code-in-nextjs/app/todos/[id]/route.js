@@ -1,10 +1,14 @@
 // return Response.json(todosData[id - 1]); this method not for any id
-import { writeFile } from "node:fs/promises";
-import todos from "../../../todos";
+// import { writeFile } from "node:fs/promises";
+// import todos from "../../../todos";
+import Todo from "@/models/todoModel";
+import { connectDB } from "@/lib/connectDB";
 
 export async function GET(_, { params }) {
+  await connectDB();
   const { id } = await params;
-  const todo = todos.find((todo) => id === todo.id);
+  // const todo = todos.find((todo) => id === todo.id);
+  const todo = await Todo.findById(id);
 
   if (!todo) {
     return Response.json(
@@ -18,33 +22,41 @@ export async function GET(_, { params }) {
 }
 
 export async function PUT(request, { params }) {
+  await connectDB();
   const editTodoData = await request.json();
   const { id } = await params;
-  const todoIndex = todos.findIndex((todo) => id === todo.id);
-  const todo = todos[todoIndex];
+  // const todoIndex = todos.findIndex((todo) => id === todo.id);
+  // const todo = todos[todoIndex];
 
-  if (editTodoData.id) {
-    return Response.json(
-      { error: "Changing ID is not allow." },
-      {
-        status: 403,
-      }
-    );
-  }
+  // if (editTodoData.id) {
+  //   return Response.json(
+  //     { error: "Changing ID is not allow." },
+  //     {
+  //       status: 403,
+  //     }
+  //   );
+  // }
 
-  const editedTodo = { ...todo, ...editTodoData };
-  todos[todoIndex] = editedTodo;
+  // const editedTodo = { ...todo, ...editTodoData };
+  // todos[todoIndex] = editedTodo;
 
-  await writeFile("todos.json", JSON.stringify(todos, null, 2));
+  // await writeFile("todos.json", JSON.stringify(todos, null, 2));
+  const editedTodo = await Todo.findByIdAndUpdate(id, editedTodoData, {
+    new: true,
+    // runValidators: true,
+  });
+  
   return Response.json(editedTodo);
 }
 
 export async function DELETE(_, { params }) {
+  await connectDB();
   const { id } = await params;
-  const todoIndex = todos.findIndex((todo) => id === todo.id);
+  // const todoIndex = todos.findIndex((todo) => id === todo.id);
+  // todos.splice(todoIndex, 1);
+  // await writeFile("todos.json", JSON.stringify(todos, null, 2));
 
-  todos.splice(todoIndex, 1);
-  await writeFile("todos.json", JSON.stringify(todos, null, 2));
+  await Todo.findByIdAndDelete(id);
   return new Response(null, {
     status: 204,
   });
