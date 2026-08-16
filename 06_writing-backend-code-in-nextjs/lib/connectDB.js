@@ -1,7 +1,6 @@
 import mongoose from "mongoose";
 
-const DB_URI = "mongodb://localhost:27017/todoApp?authSource=admin";
-
+const DB_URI = process.env.MONGODB_URI;
 // mongoose.connect(DB_URI);
 // console.log("Database connected!");
 
@@ -15,7 +14,7 @@ export const connectDB = async () => {
       console.log("Already connected!");
       return;
     }
-    mongoose.connect(DB_URI);
+    await mongoose.connect(DB_URI);
     console.log("Database connected!");
   } catch (err) {
     console.log(err);
