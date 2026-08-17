@@ -3,16 +3,37 @@
 import { connectDB } from "@/lib/connectDB";
 // import mongoose from "mongoose";
 import Todo from "@/models/todoModel";
+import { cookies } from "next/headers";
 
 // connectDB();
 
-export async function GET() {
+export async function GET(request) {
   await connectDB();
+  const cookieStore = await cookies();
+
   // const result = db.collection("users").insertOne({ name: "Amir" });
   // const result = await mongoose.connection.db
   //   .collection("todos")
   //   .insertMany([{ title: "Learn Node.js", completed: false }]);
   const allTodo = await Todo.find();
+
+  // console.log(cookieStore.get("userId").value);
+  cookieStore.set("userId", "1234", {
+    httpOnly: true,
+    maxAge: 5,
+  });
+
+  // console.log(request.headers.get("cookie"))
+
+  // const response = new Response(JSON.stringify([]), {
+  //   headers: {
+  //     // 'Set-Cookie' : "name=ProCodrr;path=/;httpOnly",
+  //     'Set-Cookie' : "userId=ProCodrr;path=/;httpOnly",
+  //   },
+  // });
+  // return response;
+
+
   // console.log(allTodo.map(((id,))));
 
   // const todoJSONString = await readFile("./todos.json", "utf-8");

@@ -15,7 +15,11 @@ export default function Home() {
   }, []);
 
   const fetchTodos = async () => {
-    const response = await fetch("/api/todos");
+    const response = await fetch("/api/todos"
+    //   , {
+    //   credentials: "include",
+    // } it use when different port site use here we use same site
+  );
     const todosData = await response.json();
     // setTodos(todosData.reverse());
     setTodos(todosData);
