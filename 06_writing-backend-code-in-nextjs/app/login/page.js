@@ -11,8 +11,18 @@ export default function LoginPage() {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    console.log("Logging in:", { email, password });
-    router.push("/dashboard");
+    const response = await fetch("/api/login", {
+      method: "POST",
+      body: JSON.stringify({ email, password }),
+    });
+    const data = await response.json();
+    console.log(data);
+    if (response.status === 401) {
+      return router.push("/login");
+    }
+    if (!data.error) {
+      return router.push("/");
+    }
   };
 
   return (

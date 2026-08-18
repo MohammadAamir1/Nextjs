@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
 const Todo = mongoose.models.Todo || mongoose.model("Todo", {
     text: {
@@ -9,6 +9,9 @@ const Todo = mongoose.models.Todo || mongoose.model("Todo", {
         type: Boolean,
         default: false,
         required: true,
+    },
+    userId: {
+        type: Schema.Types.ObjectId,
     },
 });
 
