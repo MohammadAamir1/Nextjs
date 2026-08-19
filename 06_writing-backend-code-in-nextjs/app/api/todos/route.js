@@ -1,5 +1,6 @@
 // import { readFile, writeFile } from "node:fs/promises";
 // import todos from "../../todos";
+import { getLoggedInUser } from "@/lib/auth";
 import { connectDB } from "@/lib/connectDB";
 // import mongoose from "mongoose";
 import Todo from "@/models/todoModel";
@@ -10,26 +11,32 @@ import { cookies } from "next/headers";
 
 export async function GET(request) {
   await connectDB();
-  const cookieStore = await cookies();
+  // const cookieStore = await cookies();
 
-  const userId = cookieStore.get("userId")?.value;
-  console.log({userId});
+  // const userId = cookieStore.get("userId")?.value;
+  // // console.log({userId});
 
-  const user = User.findById(userId);
-  if(!user){
-    return Response.json(
-    { error: "Please login" },
-    {
-      status: 401,
-    }
-  );
-  }
+  // const user = User.findById(userId);
+  // if(!user){
+  //   return Response.json(
+  //   { error: "Please login" },
+  //   {
+  //     status: 401,
+  //   }
+  // );
+  // }
 
   // const result = db.collection("users").insertOne({ name: "Amir" });
   // const result = await mongoose.connection.db
   //   .collection("todos")
   //   .insertMany([{ title: "Learn Node.js", completed: false }]);
-  const allTodo = await Todo.find({ userId });
+  
+  const user = getLoggedInUser();
+  if (user instanceof Response){
+    return user;
+  }
+  
+  const allTodos = await Todo.find({ userId: user.id });
 
   // console.log(cookieStore.get("userId").value);
   // cookieStore.set("userId", "1234", {
@@ -52,30 +59,32 @@ export async function GET(request) {
 
   // const todoJSONString = await readFile("./todos.json", "utf-8");
   // const todos = JSON.parse(todoJSONString);
-  return Response.json(allTodo.map(({ id, text, completed }) => ({ id, text, completed })));
+  return Response.json(allTodos.map(({ id, text, completed }) => ({ id, text, completed })));
 }
 
 export async function POST(request) {
   await connectDB();
-  const cookiesStore = await cookies();
+  const user = await getLoggedInUser();
+  if (user instanceof Response) return user;
 
-  const userId = cookiesStore.get("userId")?.value;
-  console.log({userId});
+  // const cookiesStore = await cookies();
+  // const userId = cookiesStore.get("userId")?.value;
+  // console.log({userId});
 
-  const user = User.findById(userId);
-  if(!user){
-    return Response.json(
-    { error: "Please login" },
-    {
-      status: 401,
-    }
-  );
-  }
+  // const user = User.findById(userId);
+  // if(!user){
+  //   return Response.json(
+  //   { error: "Please login" },
+  //   {
+  //     status: 401,
+  //   }
+  // );
+  // }
 
   const todo = await request.json();
   const { id, text, completed } = await Todo.create({
      text: todo.text, 
-     userId,
+     userId: user.id,
     });
   return Response.json(
     { id, text, completed },

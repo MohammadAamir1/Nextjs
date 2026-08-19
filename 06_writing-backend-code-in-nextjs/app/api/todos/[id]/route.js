@@ -3,12 +3,17 @@
 // import todos from "../../../todos";
 import Todo from "@/models/todoModel";
 import { connectDB } from "@/lib/connectDB";
+import { getLoggedInUser } from "@/lib/auth";
 
 export async function GET(_, { params }) {
   await connectDB();
+
+  const user = await getLoggedInUser();
+  if (user instanceof Response) return user;
+
   const { id } = await params;
   // const todo = todos.find((todo) => id === todo.id);
-  const todo = await Todo.findById(id);
+  const todo = await Todo.findOne({ _id: id, userId: user.id });
 
   if (!todo) {
     return Response.json(
@@ -23,6 +28,10 @@ export async function GET(_, { params }) {
 
 export async function PUT(request, { params }) {
   await connectDB();
+
+  const user = await getLoggedInUser();
+  if (user instanceof Response) return user;
+
   const editTodoData = await request.json();
   const { id } = await params;
   // const todoIndex = todos.findIndex((todo) => id === todo.id);
@@ -41,7 +50,7 @@ export async function PUT(request, { params }) {
   // todos[todoIndex] = editedTodo;
 
   // await writeFile("todos.json", JSON.stringify(todos, null, 2));
-  const editedTodo = await Todo.findByIdAndUpdate(id, editedTodoData, {
+  const editedTodo = await Todo.updateMany( { _id: id, userId: user.id }, editTodoData, {
     new: true,
     // runValidators: true,
   });
@@ -51,12 +60,16 @@ export async function PUT(request, { params }) {
 
 export async function DELETE(_, { params }) {
   await connectDB();
+
+  const user = await getLoggedInUser();
+  if (user instanceof Response) return user;
+
   const { id } = await params;
   // const todoIndex = todos.findIndex((todo) => id === todo.id);
   // todos.splice(todoIndex, 1);
   // await writeFile("todos.json", JSON.stringify(todos, null, 2));
 
-  await Todo.findByIdAndDelete(id);
+  await Todo.deleteOne({ _id: id, userId: user.id});
   return new Response(null, {
     status: 204,
   });
