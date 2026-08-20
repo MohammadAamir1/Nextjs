@@ -50,13 +50,17 @@ export async function PUT(request, { params }) {
   // todos[todoIndex] = editedTodo;
 
   // await writeFile("todos.json", JSON.stringify(todos, null, 2));
-  const editedTodo = await Todo.updateMany( { _id: id, userId: user.id }, editTodoData, {
+  const editedTodo = await Todo.updateMany( 
+    { _id: id, userId: user.id }, 
+     editTodoData, {
     new: true,
     // runValidators: true,
   });
   
   return Response.json(editedTodo);
 }
+
+
 
 export async function DELETE(_, { params }) {
   await connectDB();
@@ -74,3 +78,5 @@ export async function DELETE(_, { params }) {
     status: 204,
   });
 }
+
+

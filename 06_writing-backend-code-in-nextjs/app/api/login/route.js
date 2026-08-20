@@ -1,6 +1,8 @@
 import { connectDB } from "@/lib/connectDB";
 import User from "@/models/userModel";
 import { cookies } from "next/headers";
+import { createHmac, randomBytes } from "crypto"; // random bytes also use
+import { signCookie } from "@/lib/auth";
 
 export async function POST(request) {
   await connectDB();
@@ -17,7 +19,15 @@ export async function POST(request) {
       );
     }
 
-    cookiesStore.set("userId", user.id, {
+    // const signature = createHmac('sha256', process.env.COOKIE_SECRET)
+    //   .update(user.id)
+    //   .digest("hex");
+    // // console.log({ signature });
+
+    // const signedUserId = `${user.id}.${signature}`;
+      
+
+    cookiesStore.set("userId", signCookie(user.id), {
       httpOnly: true,
       maxAge: 60 * 60 * 24,
     });

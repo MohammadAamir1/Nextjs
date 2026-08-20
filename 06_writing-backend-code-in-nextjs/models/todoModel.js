@@ -12,6 +12,7 @@ const Todo = mongoose.models.Todo || mongoose.model("Todo", {
     },
     userId: {
         type: Schema.Types.ObjectId,
+        required: true,
     },
 });
 

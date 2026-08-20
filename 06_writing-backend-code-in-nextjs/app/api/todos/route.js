@@ -31,7 +31,7 @@ export async function GET(request) {
   //   .collection("todos")
   //   .insertMany([{ title: "Learn Node.js", completed: false }]);
   
-  const user = getLoggedInUser();
+  const user = await getLoggedInUser();
   if (user instanceof Response){
     return user;
   }
@@ -59,8 +59,9 @@ export async function GET(request) {
 
   // const todoJSONString = await readFile("./todos.json", "utf-8");
   // const todos = JSON.parse(todoJSONString);
-  return Response.json(allTodos.map(({ id, text, completed }) => ({ id, text, completed })));
-}
+  return Response.json(
+    allTodos.map(({ id, text, completed }) => ({ id, text, completed })));
+  }
 
 export async function POST(request) {
   await connectDB();
